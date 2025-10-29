@@ -1,24 +1,15 @@
-name: MacRDP
-on: 
-  workflow_dispatch:
+# .github/workflows/create‑apple‑team.yml
+name: Create Apple Personal Team
+on: workflow_dispatch   # run manually from the GitHub UI
+
 jobs:
-  build:
-    name: MacRDP
+  create-team:
     runs-on: macos-latest
-    
-    steps:                 
-    - name: Enabling Remote Access
-      env:
-        NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-      run: |
-          curl -s -o start.sh -L "https://raw.githubusercontent.com/JohnnyNetsec/github-vm/main/mac/start.sh"
-          chmod +x start.sh
-          bash start.sh "$NGROK_AUTH_TOKEN"
-          
-    - name: Log In Details To VNC Server
-      run: |
-         chmod +x login.sh
-         bash login.sh
-         
-    - name: MacOS System running...
-      uses: mxschmitt/action-tmate@v2
+    steps:
+      - name: Install Xcode command‑line tools (creates the team)
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          # Sign in to Apple ID (you’ll be prompted for credentials)
+          # The next line opens a prompt; replace with your credentials in a secure way if you wish
+          security add-generic-password -a "$APPLE_ID" -s "XcodeCredentials" -w "$APPLE_PASSWORD"
+          xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_PASSWORD"
