@@ -1,0 +1,15 @@
+# .github/workflows/create‑apple‑team.yml
+name: Create Apple Personal Team
+on: workflow_dispatch   # run manually from the GitHub UI
+
+jobs:
+  create-team:
+    runs-on: macos-latest
+    steps:
+      - name: Install Xcode command‑line tools (creates the team)
+        run: |
+          sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+          # Sign in to Apple ID (you’ll be prompted for credentials)
+          # The next line opens a prompt; replace with your credentials in a secure way if you wish
+          security add-generic-password -a "$APPLE_ID" -s "XcodeCredentials" -w "$APPLE_PASSWORD"
+          xcrun altool --list-providers -u "$APPLE_ID" -p "$APPLE_PASSWORD"
